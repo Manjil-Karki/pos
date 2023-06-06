@@ -44,6 +44,20 @@ class InventoryModel:
         self.conn.commit()
 
 
+    def get_colnames(self):
+        self.cursor.execute('''
+            PRAGMA table_info(inventory)
+        ''')
+        cols = self.cursor.fetchall()
+        cols = [col[1] for col in cols]
+        return cols
+
+    def get_allproducts(self):
+        self.cursor.execute('''
+            SELECT rowid, * FROM inventory
+        ''')
+        return self.cursor.fetchall()
+
     def add_produt_details(self, record):
         self.cursor.execute('''
             INSERT INTO inventory (

@@ -18,6 +18,14 @@ class SalesModel:
             )
         ''')
 
+    def get_colnames(self):
+        self.cursor.execute('''
+            PRAGMA table_info(sales)
+        ''')
+        cols = self.cursor.fetchall()
+        cols = [col[1] for col in cols]
+        return cols
+
     def add_sale(self, record):
         self.cursor.execute('''
             INSERT INTO sales (
@@ -37,12 +45,12 @@ class SalesModel:
     def update_sale():
         pass
 
-    
-    def get_sales(self):
+    def get_allsales(self):
         self.cursor.execute('''
-            SELECT * FROM sales
+            SELECT rowid, * FROM sales
         ''')
         return self.cursor.fetchall()
+
 
 
     def close_connection(self):

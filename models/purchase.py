@@ -16,6 +16,21 @@ class PurchaseModel:
             )        
         ''')
 
+    def get_colnames(self):
+        self.cursor.execute('''
+            PRAGMA table_info(purchase)
+        ''')
+        cols = self.cursor.fetchall()
+        cols = [col[1] for col in cols]
+        return cols
+
+    def get_allpurchases(self):
+        self.cursor.execute('''
+            SELECT rowid, * FROM purchase
+        ''')
+        return self.cursor.fetchall()
+
+
     def add_purchase(self, record):
         self.cursor.execute('''
             INSERT INTO purchase (

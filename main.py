@@ -13,8 +13,9 @@ if __name__ == "__main__":
     purchase_model = PurchaseModel()
     sale_controller = SalesController(sales_model = sales_model, inventory_model = inventory_model, view = None)
     purchase_controller = PurchaseController(purchase_model = purchase_model, view=None)
-    dash_controller = DashController()
+    dash_controller = DashController(sale_model=sales_model, inventory_model=inventory_model, purchase_model=purchase_model, view=None)
     app = MyApp(sale_controller, purchase_controller, dash_controller)
     sale_controller.view = app.sales_view
     purchase_controller.view = app.inventory_view
+    dash_controller.view = app.dash_view
     app.mainloop()

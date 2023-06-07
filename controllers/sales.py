@@ -1,19 +1,21 @@
 from datetime import datetime
 
 class SalesController:
-    def __init__(self, sales_model, inventory_model, view):
+    def __init__(self, sales_model, inventory_controller, view):
         
         self.sales_model = sales_model
-        self.inventory_model = inventory_model
-        self.products = self.inventory_model.get_product_names()
+        self.inventory_controller = inventory_controller
         self.view = view
 
+
+    def get_products(self):
+        return self.inventory_controller.get_products()
 
     def add_to_cart(self):
         product = self.view.get_product()
         quantity = self.view.get_quantity()
         if product and quantity:
-            rate = self.inventory_model.get_product_rate(product)
+            rate = self.inventory_controller.get_rate(product)
             amount = float(quantity) * rate
             item = f"{product} : {quantity} X {rate} = {amount}"
             self.view.update_total(amount)
@@ -41,6 +43,7 @@ class SalesController:
             rates.append(rate)
             amount = float(rate) * float(quantity)
             total += float(amount)
+            self.inventory_controller.update_sales_inventory([product, float(quantity)])
         
         record[0] = datetime.now().strftime("20%y/%m/%d %H:%M:%S")
         record[1] = ', '.join(products)
@@ -52,6 +55,7 @@ class SalesController:
         record[7] = total - paid if total > paid else 0
 
         print(record)
+        
         self.sales_model.add_sale(record)
 
         rtrn = paid - total if paid > total else 0
@@ -79,6 +83,8 @@ class SalesController:
             self.view.show_warning("Enter Buyer's Name")
 
 
+    def recreate_optionmenu(self):
+        self.view.recreate_optionMenu()
 
 if __name__ == "__main__":
     controller = SalesController()

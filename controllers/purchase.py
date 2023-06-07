@@ -3,10 +3,11 @@ from controllers.inventory import InventoryController
 
 
 class PurchaseController:
-    def __init__(self, view, purchase_model):
+    def __init__(self, view, purchase_model, sales_controller, inventory_controller):
         self.view = view
         self.model = purchase_model
-        self.inventory = InventoryController()
+        self.inventory = inventory_controller
+        self.sales = sales_controller
 
     def verify_cart(self):
         if not (self.view.entry_quantity.get() and self.view.entry_costpsack.get()):
@@ -25,6 +26,7 @@ class PurchaseController:
         self.model.add_purchase(details)
         self.inventory.update_inventory(details)
         self.view.show_checkout_details(details[1:3])
+        self.sales.recreate_optionmenu()
         self.view.checkout()
 
 

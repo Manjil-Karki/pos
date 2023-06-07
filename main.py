@@ -5,14 +5,15 @@ from models.purchase import PurchaseModel
 from controllers.sales import SalesController
 from controllers.purchase import PurchaseController
 from controllers.dash import DashController
-
+from controllers.inventory import InventoryController
 
 if __name__ == "__main__":
     sales_model = SalesModel()
     inventory_model = InventoryModel()
     purchase_model = PurchaseModel()
-    sale_controller = SalesController(sales_model = sales_model, inventory_model = inventory_model, view = None)
-    purchase_controller = PurchaseController(purchase_model = purchase_model, view=None)
+    inventory_controller = InventoryController(inventory_model)
+    sale_controller = SalesController(sales_model = sales_model, inventory_controller = inventory_controller, view = None)
+    purchase_controller = PurchaseController(purchase_model = purchase_model, sales_controller=sale_controller, inventory_controller=inventory_controller, view=None)
     dash_controller = DashController(sale_model=sales_model, inventory_model=inventory_model, purchase_model=purchase_model, view=None)
     app = MyApp(sale_controller, purchase_controller, dash_controller)
     sale_controller.view = app.sales_view

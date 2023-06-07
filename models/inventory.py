@@ -43,6 +43,11 @@ class InventoryModel:
         ''', (data[0], data[1], rowid))
         self.conn.commit()
 
+    def update_product_quantity(self, quanttity, rowid):
+        self.cursor.execute('''
+           UPDATE inventory set remaining_quantity = ? WHERE rowid = ?
+        ''', (quanttity, rowid))
+        self.conn.commit()
 
     def get_colnames(self):
         self.cursor.execute('''

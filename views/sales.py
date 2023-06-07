@@ -12,7 +12,7 @@ class SalesView(ttk.Frame):
         self.label_product = tk.Label(self, text="Product:")
         self.label_product.grid(row=0, column=0, padx=10, pady=5)
 
-        self.entry_product = tk.OptionMenu(self, self.variable, *self.controller.products)
+        self.entry_product = tk.OptionMenu(self, self.variable, *self.controller.get_products())
         self.entry_product.config(width=5)
         self.entry_product.grid(row=0, column=1, columnspan=1, padx=10, pady=5)
 
@@ -50,6 +50,12 @@ class SalesView(ttk.Frame):
         self.button_checkout = tk.Button(self, text="Checkout", command=self.controller.checkout)
         self.button_checkout.grid(row=4, column=2, padx=10, pady=5)
 
+
+    def recreate_optionMenu(self):
+        self.entry_product.destroy()
+        self.entry_product = tk.OptionMenu(self, self.variable, *self.controller.get_products())
+        self.entry_product.config(width=5)
+        self.entry_product.grid(row=0, column=1, columnspan=1, padx=10, pady=5)
 
     def update_total(self, new_amt):
         prev_total = float(self.text_total.cget('text'))

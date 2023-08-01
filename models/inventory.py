@@ -9,10 +9,24 @@ class InventoryModel:
             CREATE TABLE IF NOT EXISTS inventory (
                 product TEXT UNIQUE,
                 rate REAL,
-                remaining_quantity REAL
+                remaining_quantity REAL,
+                last_updated TEXT DEFAULT CURRENT_TIMESTAMP
             )        
         ''')
 
+        self.update_trigger()
+
+
+    def update_trigger(self):
+        update_trigger_query = """
+            CREATE TRIGGER IF NOT EXISTS auto_update_time
+            AFTER UPDATE ON inventory
+            FOR EACH ROW
+            BEGIN
+                UPDATE inventory SET last_updated = datetime('now') WHERE ROWID = NEW.ROWID;
+            END;
+            """
+        self.cursor.execute(update_trigger_query)
     
     def get_product_names(self):
         self.cursor.execute('''
@@ -72,4 +86,11 @@ class InventoryModel:
             ) VALUES (?, ?, ?)
         ''', record)
         print("Inserted Inventory new data")
+        self.conn.commit()
+
+
+    def update_by_name(self, values):
+        self.cursor.execute('''
+           UPDATE inventory set rate = ?, remaining_quantity = ? WHERE product = ?
+        ''', (values[1], values[2], values[0]))
         self.conn.commit()

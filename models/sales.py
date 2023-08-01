@@ -14,9 +14,23 @@ class SalesModel:
                 rates TEXT,
                 total_amount REAL,
                 paid REAL,
-                remaining REAL
+                remaining REAL,
+                last_updated TEXT DEFAULT CURRENT_TIMESTAMP
             )
         ''')
+        self.update_trigger()
+
+
+    def update_trigger(self):
+        update_trigger_query = """
+            CREATE TRIGGER IF NOT EXISTS auto_update_time
+            AFTER UPDATE ON sales
+            FOR EACH ROW
+            BEGIN
+                UPDATE sales SET last_updated = datetime('now') WHERE ROWID = NEW.ROWID;
+            END;
+            """
+        self.cursor.execute(update_trigger_query)
 
     def get_colnames(self):
         self.cursor.execute('''
@@ -47,10 +61,24 @@ class SalesModel:
 
     def get_allsales(self):
         self.cursor.execute('''
-            SELECT rowid, * FROM sales
+            SELECT rowid, * FROM sales ORDER BY date_time DESC
         ''')
         return self.cursor.fetchall()
 
+
+    def update_by_date(self, values):
+        self.cursor.execute('''
+            UPDATE sales set
+                        products = ?,
+                        buyer = ?,
+                        quantitities = ?,
+                        rates = ?,
+                        total_amount = ?,
+                        paid = ?,
+                        remaining = ?
+                        WHERE date_time = ?
+        ''', (values[1], values[2], values[3], values[4], values[5], values[6], values[7],values[0]))
+        self.conn.commit()
 
 
     def close_connection(self):

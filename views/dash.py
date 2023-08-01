@@ -38,10 +38,12 @@ class DashView(ttk.Frame):
         self.treeview.heading("#0", text="ID")
         self.treeview.column("#0",minwidth=30, width = 30)
         self.cur_cols = cols
-        for col in cols:
-            self.treeview.heading(col, text=col)
-            col_width = len(col) * 20
-            self.treeview.column(col, minwidth = col_width, width=col_width)
+        for i in range(len(cols)):
+            col_width = len(cols[i]) * 10
+            if i == 0 or i == len(cols) - 1:
+                col_width = 150
+            self.treeview.heading(cols[i], text=cols[i])
+            self.treeview.column(cols[i], minwidth = col_width, width=col_width)
 
         for d in data:
             self.treeview.insert("", "end", text=d[0], values=d[1:])

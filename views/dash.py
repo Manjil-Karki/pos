@@ -57,6 +57,10 @@ class DashView(ttk.Frame):
     def create_edit_window(self):
         item, values, flag = self.get_selected_item()
 
+
+        if self.view_flag > 2:
+            return
+
         if not values:
             return
         values = iter(values)
@@ -106,6 +110,8 @@ class DashView(ttk.Frame):
             return False
 
     def delete_record(self):
+        if self.view_flag > 2:
+            return
         curItem = self.treeview.focus()
         if curItem:
             values = self.treeview.item(curItem, 'values')

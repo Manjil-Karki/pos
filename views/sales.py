@@ -46,6 +46,8 @@ class SalesView(ttk.Frame):
         self.entry_paid = tk.Entry(self)
         self.entry_paid.grid(row=3, column=3, padx=10, pady=5)
 
+        self.button_clear = tk.Button(self, text="clear", command=self.clear_cart)
+        self.button_clear.grid(row=4, column=1, padx=10, pady=5)
 
         self.button_checkout = tk.Button(self, text="Checkout", command=self.controller.checkout)
         self.button_checkout.grid(row=4, column=2, padx=10, pady=5)

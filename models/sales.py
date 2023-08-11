@@ -81,5 +81,21 @@ class SalesModel:
         self.conn.commit()
 
 
+    def get_udaro_data(self):
+        self.cursor.execute('''
+            SELECT rowid, buyer, sum(total_amount), sum(paid), sum(remaining) 
+            FROM sales where remaining > 0 GROUP BY buyer ORDER BY sum(remaining) DESC
+        ''')
+        vals = self.cursor.fetchall()
+        cols = ['Buyer Name', 'Total _bought', 'Paid', 'Remaining']
+        return cols, vals
+
+
+    def delete_by_date(self, date):
+        self.cursor.execute("DELETE FROM sales WHERE date_time == ?", (date,))
+
+        self.conn.commit()
+
+
     def close_connection(self):
         self.conn.close()

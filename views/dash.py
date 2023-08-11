@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, Frame, Toplevel
+from tkinter import ttk, Frame, Toplevel, messagebox
 
 class DashView(ttk.Frame):
     def __init__(self, root, controller):
@@ -18,12 +18,17 @@ class DashView(ttk.Frame):
         self.button_purchase = tk.Button(self, text="Purchase", command=self.controller.purchase_view)
         self.button_purchase.grid(row=0, column=3, padx=10, pady=5)
 
-        self.button_edit = tk.Button(self, text="Edit", command=self.create_edit_window)
-        self.button_edit.grid(row=0, column=4, padx=10, pady=5)
+        self.button_udharo = tk.Button(self, text="Udharo", command=self.controller.udharo_view)
+        self.button_udharo.grid(row=0, column=4, padx=10, pady=5)
 
+        self.button_edit = tk.Button(self, text="Edit", command=self.create_edit_window)
+        self.button_edit.grid(row=0, column=5, padx=10, pady=5)
+
+        self.button_delete = tk.Button(self, text="Delete", command=self.delete_record)
+        self.button_delete.grid(row=0, column=6, padx=10, pady=5)
 
         self.tree_frame = ttk.Frame(self)
-        self.tree_frame.grid(row = 1, columnspan = 6, padx=10, pady=5)
+        self.tree_frame.grid(row = 1, columnspan = 8, padx=10, pady=5)
         self.treeview = ttk.Treeview(self.tree_frame, columns = [])
 
         self.create_treeview(cols = [], data = [])
@@ -93,6 +98,23 @@ class DashView(ttk.Frame):
         button_update.grid(row=i, column=1, padx=10, pady=5)
 
         
+    def show_warning(self, message):
+        result = messagebox.showwarning("Warning", message, type=messagebox.OKCANCEL)
+        if result == 'ok':
+            return True
+        else:
+            return False
+
+    def delete_record(self):
+        curItem = self.treeview.focus()
+        if curItem:
+            values = self.treeview.item(curItem, 'values')
+            status = self.show_warning(f"selected Item will be deleted click ok to perform action")
+            flag = self.view_flag
+            if status:
+                self.controller.delete_record(values, flag)
+
+
     def get_selected_item(self):
         curItem = self.treeview.focus()
         values = self.treeview.item(curItem, 'values')

@@ -94,3 +94,20 @@ class InventoryModel:
            UPDATE inventory set rate = ?, remaining_quantity = ? WHERE product = ?
         ''', (values[1], values[2], values[0]))
         self.conn.commit()
+
+    
+    def delete_by_name(self, name):
+        self.cursor.execute("DELETE FROM inventory WHERE product == ?", (name,))
+
+        self.conn.commit()
+
+
+    def update_deleted(self, product, quantity):
+        print(product, quantity)
+        self.cursor.execute(
+            '''
+              UPDATE inventory set remaining_quantity = remaining_quantity - ? WHERE product = ?  
+            ''', (quantity, product)
+        )
+        self.conn.commit()
+        print("from here")

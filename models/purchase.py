@@ -71,3 +71,12 @@ class PurchaseModel:
                         WHERE date_time = ?
         ''', (values[1], values[2], values[3], values[4], values[5], values[0]))
         self.conn.commit()
+        
+    def delete_by_date(self, date):
+        try:
+            self.cursor.execute("DELETE FROM purchase WHERE date_time == ?", (date,))
+
+            self.conn.commit()
+            return True
+        except:
+            return False

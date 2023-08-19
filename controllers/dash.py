@@ -1,8 +1,9 @@
 class DashController:
-    def __init__(self, sale_model, inventory_model, purchase_model, view):
+    def __init__(self, sale_model, inventory_model, purchase_model, udaro_model, view):
         self.sale_model = sale_model
         self.inventory_model = inventory_model
         self.purchase_model = purchase_model
+        self.udaro_model = udaro_model
         self.view = view
 
     def sales_view(self):
@@ -28,7 +29,8 @@ class DashController:
 
 
     def udharo_view(self):
-        cols, data = self.sale_model.get_udaro_data()
+        cols = self.udaro_model.get_colnames()
+        data = self.udaro_model.get_alludaro()
         self.view.create_treeview(cols, data)
         self.view.view_flag = 3
 
@@ -48,6 +50,11 @@ class DashController:
             self.purchase_model.update_by_date(values)
             
             self.purchase_view()
+
+        elif table == 3:
+            self.udaro_model.update_by_date(values)
+        
+            self.udharo_view()
         else:
             print("error")
         print(cols, values, table)
@@ -69,5 +76,9 @@ class DashController:
             if a:
                 self.inventory_model.update_deleted(record[1], float(record[2])*float(record[3]))
             self.purchase_view()
+
+        elif table == 3:
+            self.udaro_model.delete_by_date(record[0])
+            self.udharo_view()
         else:
             print("error")
